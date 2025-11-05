@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Свидание 🌙</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at center, #09001a 0%, #000000 80%);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: moveStar linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes moveStar {
+      from {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+
+    .heart-container {
+      position: relative;
+      z-index: 2;
+      cursor: pointer;
+    }
+
+    .heart {
+      font-size: 300px;
+      background: linear-gradient(45deg, #ff00ff, #ff66cc, #9900ff, #00ffff, #ff6600);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 60px rgba(255, 0, 255, 0.8);
+      animation: pulse 1.8s infinite, gradientMove 6s infinite linear;
+      transition: transform 0.3s;
+    }
+
+    .heart-container:hover .heart {
+      transform: scale(1.2);
+      text-shadow: 0 0 80px rgba(255, 0, 255, 1);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .invitation {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      background: rgba(15, 15, 30, 0.96);
+      border: 1px solid rgba(255, 0, 255, 0.4);
+      box-shadow: 0 0 30px rgba(255, 0, 255, 0.6);
+      border-radius: 20px;
+      padding: 30px;
+      width: 85%;
+      max-width: 440px;
+      text-align: center;
+      opacity: 0;
+      transition: all 0.6s ease;
+      z-index: 3;
+    }
+
+    .invitation.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 24px;
+      color: #ffccff;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .close-btn:hover {
+      color: #ffffff;
+    }
+
+    .hint {
+      position: absolute;
+      bottom: 60px;
+      font-size: 20px;
+      color: #ffccff;
+      text-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+      animation: blink 2s infinite;
+      z-index: 2;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="heart-container" id="heartContainer">
+    <div class="heart">❤</div>
+  </div>
+  <div class="hint">Нажми на сердце 💜</div>
+
+  <div class="invitation" id="invitation">
+    <div class="close-btn" id="closeBtn">✖</div>
+    <h2>Наше свидание 🌙</h2>
+    <p>Воскресенье, 18:00 💋</p>
+    <p>Мы пойдём лепить из глины — руками, смеясь и пачкаясь, как кринжомясецы полные)<br>
+    Пусть получится как получится, главное — вместе!</p>
+    <p>Подумай, что бы ты хотел сделать — я уверена, будет красиво.</p>
+  </div>
+
+  <script>
+    const heartContainer = document.getElementById('heartContainer');
+    const invitation = document.getElementById('invitation');
+    const closeBtn = document.getElementById('closeBtn');
+
+    heartContainer.addEventListener('click', () => {
+      invitation.classList.add('show');
+    });
+
+    closeBtn.addEventListener('click', () => {
+      invitation.classList.remove('show');
+    });
+
+    const numStars = 80;
+    for (let i = 0; i < numStars; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.top = Math.random() * -100 + 'vh';
+      star.style.animationDuration = 5 + Math.random() * 10 + 's';
+      star.style.animationDelay = Math.random() * 10 + 's';
+      document.body.appendChild(star);
+    }
+
+    setInterval(() => {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.top = '-2px';
+      star.style.animationDuration = 6 + Math.random() * 8 + 's';
+      document.body.appendChild(star);
+      setTimeout(() => star.remove(), 15000);
+    }, 300);
+  </script>
+</body>
+</html>
