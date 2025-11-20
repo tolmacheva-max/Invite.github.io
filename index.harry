@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Наше свидание 🌙</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-base {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0f1e 0%, #2d1b4e 50%, #000000 100%);
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(168, 85, 247, 0.8), rgba(236, 72, 153, 0.4));
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .rune {
+            position: absolute;
+            color: rgba(168, 85, 247, 0.3);
+            font-size: 30px;
+            font-weight: bold;
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .orb1 {
+            top: 0;
+            left: 25%;
+            width: 320px;
+            height: 320px;
+            background: rgba(147, 51, 234, 0.3);
+            animation-duration: 4s;
+        }
+
+        .orb2 {
+            top: 33%;
+            right: 25%;
+            width: 384px;
+            height: 384px;
+            background: rgba(236, 72, 153, 0.25);
+            animation-delay: 1s;
+            animation-duration: 5s;
+        }
+
+        .orb3 {
+            bottom: 0;
+            left: 50%;
+            width: 320px;
+            height: 320px;
+            background: rgba(99, 102, 241, 0.25);
+            animation-delay: 2s;
+            animation-duration: 6s;
+            transform: translateX(-50%);
+        }
+
+        .shimmer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, rgba(147, 51, 234, 0.2) 50%, transparent 100%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-30px); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .heart-button {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .heart-button:hover {
+            transform: scale(1.1);
+        }
+
+        .heart-button:active {
+            transform: scale(0.95);
+        }
+
+        .heart-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 23, 68, 0.6), rgba(255, 110, 64, 0.4));
+            filter: blur(40px);
+            animation: pulse 1.5s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        .heart-inner-glow {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: calc(100% - 32px);
+            height: calc(100% - 32px);
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 192, 203, 0.5), rgba(255, 182, 193, 0.3));
+            filter: blur(20px);
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+
+        .heart-button:hover .heart-inner-glow {
+            opacity: 1;
+        }
+
+        .heart-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            filter: drop-shadow(0 0 20px rgba(255, 23, 68, 0.8));
+        }
+
+        .instruction {
+            margin-top: 48px;
+            text-align: center;
+            color: rgba(236, 192, 211, 0.8);
+            font-size: 20px;
+            font-weight: 600;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #3d1f5c 0%, #2d1b4e 100%);
+            border: 2px solid rgba(253, 224, 71, 0.8);
+            border-radius: 24px;
+            padding: 48px 32px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: rgba(253, 224, 71, 0.8);
+            font-size: 28px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: rgba(236, 72, 153, 0.8);
+        }
+
+        .modal-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(90deg, rgba(236, 192, 211, 0.8), rgba(253, 224, 71, 0.8));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 24px;
+        }
+
+        .modal-content-text {
+            color: rgba(255, 229, 153, 0.8);
+            font-size: 18px;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .modal-content-text p {
+            margin-bottom: 16px;
+        }
+
+        .modal-time {
+            color: rgba(236, 72, 153, 0.8);
+            font-weight: 600;
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .snack-section {
+            padding-top: 16px;
+            border-top: 2px solid rgba(253, 224, 71, 0.6);
+            margin-top: 16px;
+        }
+
+        .snack-title {
+            color: rgba(236, 72, 153, 0.8);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .snack-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .snack-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255, 229, 153, 0.8);
+            transition: color 0.3s ease;
+        }
+
+        .snack-option:hover {
+            color: rgba(236, 72, 153, 0.8);
+        }
+
+        .snack-option input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .confirm-btn {
+            display: block;
+            width: 100%;
+            margin-top: 32px;
+            padding: 12px 32px;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.8), rgba(239, 68, 68, 0.8));
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .confirm-btn:hover {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 1), rgba(239, 68, 68, 1));
+            transform: scale(1.05);
+        }
+
+        .confirm-btn:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .heart-button {
+                width: 120px;
+                height: 120px;
+            }
+
+            .instruction {
+                font-size: 18px;
+                margin-top: 36px;
+            }
+
+            .modal-content {
+                padding: 32px 24px;
+            }
+
+            .modal-title {
+                font-size: 24px;
+            }
+
+            .modal-content-text {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="background">
+        <div class="bg-base"></div>
+        <div class="particles" id="particles"></div>
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+        <div class="shimmer"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <button class="heart-button" id="heartBtn" aria-label="Open invitation">
+            <div class="heart-glow"></div>
+            <div class="heart-inner-glow"></div>
+            <svg class="heart-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#ff1744;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#ff6e40;stop-opacity:1" />
+                    </linearGradient>
+                    <filter id="glow">
+                        <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+                        <feMerge>
+                            <feMergeNode in="coloredBlur" />
+                            <feMergeNode in="SourceGraphic" />
+                        </feMerge>
+                    </filter>
+                </defs>
+                <path d="M50,90 C20,70 5,55 5,40 C5,25 15,15 25,15 C35,15 45,25 50,35 C55,25 65,15 75,15 C85,15 95,25 95,40 C95,55 80,70 50,90 Z" fill="url(#heartGradient)" filter="url(#glow)" style="animation: pulse 1.5s ease-in-out infinite;" />
+            </svg>
+        </button>
+        <div class="instruction">Нажми на сердце 💋</div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="close-btn" id="closeBtn" aria-label="Close modal">&times;</button>
+            <div class="modal-title">🌙 Наше свидание 🌙</div>
+            <div class="modal-content-text">
+                <div class="modal-time">Пятница, 19:30 💋</div>
+                <p>Мы пойдём совмещать 2 интересных мероприятия: кинопоказ в сопровождении симфонического оркестра!</p>
+                <p>Давай проведем этот вечер вместе и насладимся симфонией нашей любви</p>
+                <div class="snack-section">
+                    <div class="snack-title">Как ответственный Боби С. предлагаю выбрать что мы возьмем пожевать</div>
+                    <div class="snack-options">
+                        <label class="snack-option">
+                            <input type="radio" name="snack" value="popcorn">
+                            <span>🍿 Попкорн</span>
+                        </label>
+                        <label class="snack-option">
+                            <input type="radio" name="snack" value="chocolate">
+                            <span>🍫 Шоколад</span>
+                        </label>
+                        <label class="snack-option">
+                            <input type="radio" name="snack" value="candy">
+                            <span>🍬 Конфеты</span>
+                        </label>
+                        <label class="snack-option">
+                            <input type="radio" name="snack" value="pizza">
+                            <span>🍕 Пицца</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <button class="confirm-btn" id="confirmBtn">Да, я согласен! 💕</button>
+        </div>
+    </div>
+
+    <script>
+        // Generate random particles
+        function generateParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 80;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = (Math.random() * 4 + 1) + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.opacity = Math.random() * 0.8 + 0.2;
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                particle.style.boxShadow = `0 0 ${Math.random() * 10 + 5}px rgba(168, 85, 247, 0.8)`;
+                particlesContainer.appendChild(particle);
+            }
+
+            // Generate runes
+            const runeCount = 15;
+            const runes = ['✦', '✧', '✪', '✫', '✬', '✭'];
+
+            for (let i = 0; i < runeCount; i++) {
+                const rune = document.createElement('div');
+                rune.className = 'rune';
+                rune.textContent = runes[Math.floor(Math.random() * runes.length)];
+                rune.style.left = Math.random() * 100 + '%';
+                rune.style.top = Math.random() * 100 + '%';
+                rune.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                rune.style.animationDelay = Math.random() * 4 + 's';
+                rune.style.animationDuration = (Math.random() * 4 + 3) + 's';
+                particlesContainer.appendChild(rune);
+            }
+        }
+
+        // Modal functionality
+        const heartBtn = document.getElementById('heartBtn');
+        const modal = document.getElementById('modal');
+        const closeBtn = document.getElementById('closeBtn');
+        const confirmBtn = document.getElementById('confirmBtn');
+
+        heartBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        confirmBtn.addEventListener('click', () => {
+            const selectedSnack = document.querySelector('input[name="snack"]:checked');
+            if (selectedSnack) {
+                alert(`Отлично! Ты выбрал: ${selectedSnack.value} 🎉`);
+            } else {
+                alert('Пожалуйста, выбери что-нибудь! 😊');
+            }
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.con
+(Content truncated due to size limit. Use page ranges or line ranges to read remaining content)
